@@ -4,6 +4,8 @@ import path from 'path';
 import fs from 'fs/promises';
 
 const STOCK_URL_PREFIX = "https://www.nasdaq.com/market-activity/stocks";
+const RESULT_FOLDER = "results";
+
 
 export function getStockSummaryUrlList(list: stockInfo[]): stockInfoWithUrl[] {
     const stocks: stockInfoWithUrl[] = [];
@@ -63,7 +65,7 @@ function getCurrentDate(): string {
 }
 
 function getDirectoryPrefix(): string {
-    return path.join("results", "stock_");
+    return path.join(RESULT_FOLDER, "stock_");
 }
 
 async function wait(ms: number): Promise<void> {
@@ -118,6 +120,11 @@ export async function takeSnapshotForChart(page: Page, stockCode: string): Promi
 }
 
 export async function writeSummariesToFiles(summaries: summaryInfo[]): Promise<void> {
+    try {
+        const stat = await fs.stat(RESULT_FOLDER);
+    } catch (error) {
+        await fs.mkdir(RESULT_FOLDER)
+    }
     // write data
     const prefix = getDirectoryPrefix();
     const currentDate = getCurrentDate();
