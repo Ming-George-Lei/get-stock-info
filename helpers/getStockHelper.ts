@@ -80,14 +80,17 @@ export async function takeSnapshotForChart(page: Page, stockCode: string): Promi
     const prefix = getDirectoryPrefix();
     const currentDate = getCurrentDate();
     const folder = `${prefix}${currentDate}`;
-
+    const box = await chartlocator.boundingBox();
+    if (!box) {
+        return;
+    }
     // click 1 day
     const oneDayRange = rangeLocator.getByText('1D');
     await oneDayRange.click();
     const oneDayRangeName = `${stockCode}-1D.png`;
     const oneDayPath = path.join(folder, oneDayRangeName);
     await wait(15000);
-    await page.screenshot({ type: 'png', path: oneDayPath });
+    await page.screenshot({ clip: { ...box }, type: 'png', path: oneDayPath });
 
     // click 5 day
     const fiveDayRange = rangeLocator.getByText('5D');
@@ -95,28 +98,28 @@ export async function takeSnapshotForChart(page: Page, stockCode: string): Promi
     const ficeDayRangeName = `${stockCode}-5D.png`;
     const fiveDayPath = path.join(folder, ficeDayRangeName);
     await wait(15000);
-    await page.screenshot({ type: 'png', path: fiveDayPath });
+    await page.screenshot({ clip: { ...box }, type: 'png', path: fiveDayPath });
     // click 1 month
     const oneMonthRange = rangeLocator.getByText('1M');
     await oneMonthRange.click();
     const oneMonthRangeName = `${stockCode}-1M.png`;
     const oneMonthPath = path.join(folder, oneMonthRangeName);
     await wait(15000);
-    await page.screenshot({ type: 'png', path: oneMonthPath });
+    await page.screenshot({ clip: { ...box }, type: 'png', path: oneMonthPath });
     // click 3 month
     const threeMonthRange = rangeLocator.getByText('3M');
     await threeMonthRange.click();
     const threeMonthRangeName = `${stockCode}-3M.png`;
     const threeMonthPath = path.join(folder, threeMonthRangeName);
     await wait(15000);
-    await page.screenshot({ type: 'png', path: threeMonthPath });
+    await page.screenshot({ clip: { ...box }, type: 'png', path: threeMonthPath });
     // click 6 month
     const sixMonthRange = rangeLocator.getByText('6M');
     await sixMonthRange.click();
     const sixMonthRangeName = `${stockCode}-6M.png`;
     const sixMonthPath = path.join(folder, sixMonthRangeName);
     await wait(15000);
-    await page.screenshot({ type: 'png', path: sixMonthPath });
+    await page.screenshot({ clip: { ...box }, type: 'png', path: sixMonthPath });
 }
 
 export async function writeSummariesToFiles(summaries: summaryInfo[]): Promise<void> {
