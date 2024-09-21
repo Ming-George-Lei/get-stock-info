@@ -79,7 +79,7 @@ export async function takeSnapshotForChart(page: Page, stockCode: string): Promi
     const rangeLocator = chartlocator.contentFrame().locator('cq-show-range');
     const prefix = getDirectoryPrefix();
     const currentDate = getCurrentDate();
-    const folder = `${prefix}${currentDate}`;
+    const folder = path.join(`${prefix}${currentDate}`, stockCode.toUpperCase());
     const box = await chartlocator.boundingBox();
     if (!box) {
         return;
